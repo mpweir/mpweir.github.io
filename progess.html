@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Year Progress</title>
+  <style>
+    body { font-family: sans-serif; background: #0d1b2a; color: #f0e6d3; display: flex; justify-content: center; padding: 40px; }
+
+    .year-progress {
+      width: 100%;
+      max-width: 400px;
+    }
+    .year-progress .header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .year-progress .pct {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #f4a44a;
+    }
+    .bar-track {
+      background: #1a2c42;
+      border-radius: 999px;
+      height: 14px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f4a44a, #e8622a);
+      border-radius: 999px;
+      transition: width 0.8s ease;
+    }
+    .year-progress .footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- YEAR PROGRESS BAR — paste this block into your page -->
+  <div class="year-progress">
+    <div class="header">
+      <span>Year Progress <span id="yp-year"></span></span>
+      <span class="pct" id="yp-pct"></span>
+    </div>
+    <div class="bar-track">
+      <div class="bar-fill" id="yp-bar" style="width:0%"></div>
+    </div>
+    <div class="footer">
+      <span>1 Jan</span>
+      <span id="yp-days"></span>
+      <span>31 Dec</span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const now   = new Date();
+      const year  = now.getFullYear();
+      const start = new Date(year, 0, 1);
+      const end   = new Date(year + 1, 0, 1);
+      const pct   = ((now - start) / (end - start) * 100).toFixed(1);
+      const day   = Math.ceil((now - start) / 86400000);
+      const total = Math.ceil((end - start) / 86400000);
+
+      document.getElementById('yp-year').textContent = year;
+      document.getElementById('yp-pct').textContent  = pct + '%';
+      document.getElementById('yp-days').textContent = `Day ${day} of ${total}`;
+      document.getElementById('yp-bar').style.width  = pct + '%';
+    })();
+  </script>
+
+</body>
+</html>
