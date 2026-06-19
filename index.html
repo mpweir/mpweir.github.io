@@ -1,0 +1,59 @@
+<div id="solstice-widget" style="max-width:400px;font-family:sans-serif;color:#f0e6d3;"></div>
+
+<script>
+(function () {
+  const now = new Date();
+  const y = now.getFullYear();
+
+  // Approximate solstice/equinox dates — accurate to within a day
+  const events = [
+    { name: "Spring Equinox",   label: "Equinox 🌸",            month: 2,  day: 20 },
+    { name: "Summer Solstice",  label: "The Boring One ☀️",      month: 5,  day: 21 },
+    { name: "Autumn Equinox",   label: "Equinox 🍂",            month: 8,  day: 22 },
+    { name: "Winter Solstice",  label: "The Interesting One ❄️", month: 11, day: 21 },
+  ];
+
+  function nextOccurrence(month, day) {
+    let date = new Date(y, month, day);
+    if (date <= now) date = new Date(y + 1, month, day);
+    return date;
+  }
+
+  function daysUntil(date) {
+    const diff = date - new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round(diff / 86400000);
+  }
+
+  function formatDate(date) {
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  const card = `
+    background:#1a2c42;border-radius:12px;padding:16px 20px;
+    margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;
+  `;
+
+  const html = events
+    .map(e => ({ ...e, date: nextOccurrence(e.month, e.day) }))
+    .map(e => ({ ...e, days: daysUntil(e.date) }))
+    .sort((a, b) => a.days - b.days)
+    .map(e => {
+    const { date, days } = e;
+    return `
+      <div style="${card}">
+        <div>
+          <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;">${e.label}</div>
+          <div style="font-size:1rem;font-weight:bold;margin-top:2px;">${e.name}</div>
+          <div style="font-size:0.75rem;color:#888;margin-top:2px;">${formatDate(date)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:2rem;font-weight:bold;color:#f4a44a;line-height:1;">${days}</div>
+          <div style="font-size:0.7rem;color:#aaa;">${days === 1 ? 'day' : 'days'}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('solstice-widget').innerHTML = html;
+})();
+</script>
